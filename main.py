@@ -3,6 +3,7 @@
 import signal
 import time
 import os
+import datetime
 import paho.mqtt.client as mqtt
 from rpi_rf import RFDevice
 from dotenv import load_dotenv
@@ -30,9 +31,12 @@ if __name__ == "__main__":
             if rfdevice.rx_code_timestamp != timestamp:
                 timestamp = rfdevice.rx_code_timestamp
 
-                print(str(rfdevice.rx_code) +
-                        " [pulselength " + str(rfdevice.rx_pulselength) +
-                        ", protocol " + str(rfdevice.rx_proto) + "]")
+                print("[{}] {} (pulselength {}, protocol {})".format(
+                    datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                    rfdevice.rx_code,
+                    rfdevice.rx_pulselength,
+                    rfdevice.rx_proto
+                ))
 
                 if str(rfdevice.rx_code) == "2201":
                     client.publish("rf_client", "SIGNAL")
