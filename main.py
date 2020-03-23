@@ -29,12 +29,16 @@ if __name__ == "__main__":
         while True:
             if rfdevice.rx_code_timestamp != timestamp:
                 timestamp = rfdevice.rx_code_timestamp
-                if str(rfdevice.rx_code) == "2201":
-                    client.publish("rf_client", "SIGNAL")
 
                 print(str(rfdevice.rx_code) +
                         " [pulselength " + str(rfdevice.rx_pulselength) +
                         ", protocol " + str(rfdevice.rx_proto) + "]")
+
+                if str(rfdevice.rx_code) == "2201":
+                    client.publish("rf_client", "SIGNAL")
+                    time.sleep(1) # debounce/throttle signal
+                    timestamp = rfdevice.rx_code_timestamp # update timestamp after wait to prevent looping a second time
+
             time.sleep(0.01)
 
     except KeyboardInterrupt:
