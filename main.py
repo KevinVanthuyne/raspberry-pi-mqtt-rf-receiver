@@ -16,7 +16,7 @@ def on_connect(client, userdata, flags, rc):
     logging.info("MQTT CONNECT: Connected with result code %s", str(rc))
 
 def on_log(client, userdata, level, buf):
-    logging.info("MQTT LOG: client %s - userdata %s - level %s - bug %s", client, userdata, level, bug)
+    logging.info("MQTT LOG: %s", buf)
 
 if __name__ == "__main__":
     try:
