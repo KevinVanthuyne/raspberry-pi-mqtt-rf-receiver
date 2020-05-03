@@ -10,6 +10,13 @@ from dotenv import load_dotenv
 
 gpio_pin = 26  # RF receiver is connected to pin 37 (GPIO26)
 
+# The callback for when the client receives a CONNACK response from the server.
+def on_connect(client, userdata, flags, rc):
+    print("MQTT CONNECT: Connected with result code "+str(rc))
+
+def on_log(client, userdata, level, buf):
+    print("MQTT LOG: client {} - userdata {} - level {} - bug {}".format(client, userdata, level, bug))
+
 if __name__ == "__main__":
     try:
         # load environment variables
@@ -17,7 +24,11 @@ if __name__ == "__main__":
 
         # setup mqtt
         client = mqtt.Client("rf_client")
+        client.on_connect = on_connect
+        client.on_log = on_log
+        client.enable_logger()
         client.connect(os.getenv("MQTT_HOST_ADDRESS"))
+        client.loop_start()
 
         # setup rf
         rfdevice = RFDevice(gpio_pin)
