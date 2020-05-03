@@ -49,8 +49,10 @@ if __name__ == "__main__":
                     rfdevice.rx_proto
                 ))
 
-                if str(rfdevice.rx_code) == "2201":
-                    client.publish("rf_client", "SIGNAL")
+                # first 4 numbers contain "id" code, next 4 numbers contain voltage of the sender's battery in mV
+                if str(rfdevice.rx_code)[:4] == "2201":
+                    client.publish("rf_button_1", str(rfdevice.rx_code)[4:8])
+                    print("Published on 'rf_button_1' topic with '{}' as message".format(str(rfdevice.rx_code)[4:8]))
                     time.sleep(1) # debounce/throttle signal
                     timestamp = rfdevice.rx_code_timestamp # update timestamp after wait to prevent looping a second time
 
