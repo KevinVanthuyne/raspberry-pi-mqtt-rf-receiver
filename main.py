@@ -60,6 +60,11 @@ if __name__ == "__main__":
                     logging.info("  Published 'rf_button_1' topic with message '%s'", str(rfdevice.rx_code)[4:8])
                     time.sleep(1) # debounce/throttle signal
                     timestamp = rfdevice.rx_code_timestamp # update timestamp after wait to prevent looping a second time
+                elif str(rfdevice.rx_code)[:4] == "2202":
+                    client.publish("rf_button_2", str(rfdevice.rx_code)[4:8])
+                    logging.info("  Published 'rf_button_2' topic with message '%s'", str(rfdevice.rx_code)[4:8])
+                    time.sleep(1) # debounce/throttle signal
+                    timestamp = rfdevice.rx_code_timestamp
 
             time.sleep(0.01)
 
