@@ -16,7 +16,8 @@ def on_connect(client, userdata, flags, rc):
     logging.info("MQTT CONNECT: Connected with result code %s", str(rc))
 
 def on_log(client, userdata, level, buf):
-    logging.info("MQTT LOG: %s", buf)
+    # logging.info("MQTT LOG: %s", buf)
+    pass
 
 if __name__ == "__main__":
     try:
@@ -38,7 +39,6 @@ if __name__ == "__main__":
         rfdevice = RFDevice(gpio_pin)
         rfdevice.enable_rx()
 
-
         # start listening for rf messages
         logging.info("Listening for codes on GPIO " + str(gpio_pin))
         timestamp = None
@@ -47,14 +47,17 @@ if __name__ == "__main__":
             if rfdevice.rx_code_timestamp != timestamp:
                 timestamp = rfdevice.rx_code_timestamp
 
-                logging.info(
-                    "Received message: %s (pulselength %s, protocol %s)", 
-                    rfdevice.rx_code,
-                    rfdevice.rx_pulselength,
-                    rfdevice.rx_proto
-                )
+                # logging.info(
+                #     "Received message: %s (pulselength %s, protocol %s)", 
+                #     rfdevice.rx_code,
+                #     rfdevice.rx_pulselength,
+                #     rfdevice.rx_proto
+                # )
 
                 # first 4 numbers contain "id" code, next 4 numbers contain voltage of the sender's battery in mV
+                if len(str(rfdevice.rx_code)) != 8:
+                    continue
+
                 if str(rfdevice.rx_code)[:4] == "2201":
                     client.publish("rf_button_1", str(rfdevice.rx_code)[4:8])
                     logging.info("  Published 'rf_button_1' topic with message '%s'", str(rfdevice.rx_code)[4:8])
